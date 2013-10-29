@@ -43,11 +43,12 @@ public class TomcatServer extends AbstractAplicationServer {
 		int connectorPort = Integer.valueOf(properties.getProperty("connector.port"));
 		String contextPath = properties.getProperty("server.contextPath");
 		String basePath = SysProperties.getString("BASE_HOME");
+        String address = properties.getProperty("server.address","0.0.0.0");
 		System.setProperty(Globals.CATALINA_BASE_PROP, basePath);
 		try {
 			tomcat = new Tomcat();
 			tomcat.getServer().addLifecycleListener(new AprLifecycleListener());
-			
+
 			Service service = tomcat.getService();
 			
 			Connector connector = new Connector("AJP/1.3");
@@ -56,6 +57,7 @@ public class TomcatServer extends AbstractAplicationServer {
 	        
 	        connector = new Connector("HTTP/1.1");
 	        connector.setPort(port);
+            connector.setProperty("address",address);
 	        AbstractProtocol protocol = (AbstractProtocol) connector.getProtocolHandler();
 	        StandardThreadExecutor executor = new StandardThreadExecutor();
 			executor.setName("tomcat-executor");
